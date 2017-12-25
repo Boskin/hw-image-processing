@@ -1,0 +1,11 @@
+# iverilog compiled program
+*.vvp
+# VVP signal dump file
+*.vcd
+
+# vim temp files
+*.*~
+*~
+
+*.swp
+
