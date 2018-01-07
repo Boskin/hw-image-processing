@@ -117,6 +117,47 @@ module tb_fifo_sync;
 
     end
 
+    wr_en = 1;
+    rd_en = 0;
+    for(i = 0; i < SIZE / 2; i = i + 1) begin
+      data_wr = test_data[i];
+      #(CLK_PERIOD);
+
+      `ASSERT(data_count == i + 1)
+      `ASSERT(full == 0)
+      `ASSERT(overflow == 0)
+      `ASSERT(empty == 0)
+      `ASSERT(underflow == 0)
+    end
+
+    $display("Testing read and write at the same time!");
+    wr_en = 1;
+    rd_en = 1;
+    for(i = 0; i < SIZE / 2; i = i + 1) begin
+      data_wr = test_data[i + SIZE / 2];
+
+      #(CLK_PERIOD);
+
+      `ASSERT(data_rd == test_data[i])
+      `ASSERT(data_count == SIZE / 2)
+      `ASSERT(full == 0)
+      `ASSERT(overflow == 0)
+      `ASSERT(empty == 0)
+      `ASSERT(underflow == 0)
+    end
+
+    wr_en = 0;
+    for(i = SIZE / 2; i < SIZE; i = i + 1) begin
+      #(CLK_PERIOD);
+
+      `ASSERT(data_rd == test_data[i])
+      `ASSERT(data_count == SIZE - i - 1)
+      `ASSERT(full == 0)
+      `ASSERT(overflow == 0)
+      `ASSERT(empty == (i == SIZE - 1))
+      `ASSERT(underflow == 0)
+    end
+
     $display("All assertions passed!");
     $finish;
   end

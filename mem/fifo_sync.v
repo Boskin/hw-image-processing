@@ -96,6 +96,10 @@ module fifo_sync(
         data[head] <= data_wr;
         head <= head + 1;
       end
+
+      if(rd_en == 1 && wr_en == 1) begin
+        data_count <= data_count;
+      end
     end
   end
 endmodule
